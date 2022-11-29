@@ -60,34 +60,34 @@ public final class MusicGroupImpl implements MusicGroup {
     @Override
     public int countSongsInNoAlbum() {
         return (int) this.songs.stream()
-        .filter(s -> s.getAlbumName().isEmpty())
-        .count();
+            .filter(s -> s.getAlbumName().isEmpty())
+            .count();
     }
 
     @Override
     public OptionalDouble averageDurationOfSongs(final String albumName) {
         return  this.songs.stream()
-        .filter(s-> s.getAlbumName().isPresent())
-        .filter(s -> s.getAlbumName().equals(albumName))
-        .mapToDouble(Song::getDuration)
-        .average();
+            .filter(s-> s.getAlbumName().isPresent())
+            .filter(s -> s.getAlbumName().get().equals(albumName))
+            .mapToDouble(Song::getDuration)
+            .average();
     }
 
     @Override
     public Optional<String> longestSong() {
         return this.songs.stream()
-        .collect(Collectors.maxBy((a,b) -> Double.compare(a.getDuration(),b.getDuration())))
-        .map(Song::getSongName);
+            .collect(Collectors.maxBy((a,b) -> Double.compare(a.getDuration(),b.getDuration())))
+            .map(Song::getSongName);
     }
 
     @Override
     public Optional<String> longestAlbum() {
         return this.songs.stream()
-        .filter(a -> a.getAlbumName().isPresent())
-        .collect(Collectors.groupingBy(Song::getAlbumName, Collectors.summingDouble(Song::getDuration)))
-        .entrySet().stream()
-        .collect(Collectors.maxBy(Comparator.comparingDouble(Entry::getValue)))
-        .flatMap(Entry::getKey);
+            .filter(a -> a.getAlbumName().isPresent())
+            .collect(Collectors.groupingBy(Song::getAlbumName, Collectors.summingDouble(Song::getDuration)))
+            .entrySet().stream()
+            .collect(Collectors.maxBy(Comparator.comparingDouble(Entry::getValue)))
+            .flatMap(Entry::getKey);
     }
 
     private static final class Song {

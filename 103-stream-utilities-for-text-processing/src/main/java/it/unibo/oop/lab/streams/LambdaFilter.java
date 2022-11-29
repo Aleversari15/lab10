@@ -39,6 +39,16 @@ public final class LambdaFilter extends JFrame {
          * Commands.
          */
         IDENTITY("No modifications", Function.identity());
+        //1) Convert to lowercase
+        TO_LOWERCASE();
+        //2) Count the number of chars
+        COUNT_CHARS();
+        //3) Count the number of lines
+        COUNT_LINES();
+        //4) List all the words in alphabetical order
+        ALPHABETICAL_ORDER();
+        //5) Write the count for each word, e.g. "word word pippo" should output "pippo -> 1 word -> 2"
+        WORD_COUNTER();
 
         private final String commandName;
         private final Function<String, String> fun;
