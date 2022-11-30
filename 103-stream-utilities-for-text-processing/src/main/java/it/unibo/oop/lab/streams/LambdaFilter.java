@@ -6,7 +6,10 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.LayoutManager;
 import java.awt.Toolkit;
+import java.security.Key;
+import java.util.Arrays;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -38,17 +41,26 @@ public final class LambdaFilter extends JFrame {
         /**
          * Commands.
          */
-        IDENTITY("No modifications", Function.identity());
+        IDENTITY("No modifications", Function.identity()),
         //1) Convert to lowercase
-        TO_LOWERCASE();
+        TO_LOWERCASE("Convert lo lowercase ", String::toLowerCase),
         //2) Count the number of chars
-        COUNT_CHARS();
+        COUNT_CHARS("Number of chars", s -> Integer.toString(s.length())),
         //3) Count the number of lines
-        COUNT_LINES();
+        COUNT_LINES("Number of lines", s -> Long.toString(s.chars()
+            .filter(c -> c == '\n')
+            .count()+1)),
         //4) List all the words in alphabetical order
-        ALPHABETICAL_ORDER();
+        ALPHABETICAL_ORDER(" Alphabetical order", s -> Arrays.stream(s.split(" "))
+            .sorted()
+            .collect(Collectors.joining("\n"))),
         //5) Write the count for each word, e.g. "word word pippo" should output "pippo -> 1 word -> 2"
-        WORD_COUNTER();
+        WORD_COUNTER(" Count of each word", s -> Arrays.stream(s.split(" "))
+            .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+            .entrySet().stream()
+            .map(e -> e.getKey() + " -> " + e.getValue())
+            .collect(Collectors.joining("\n"))
+        );
 
         private final String commandName;
         private final Function<String, String> fun;
